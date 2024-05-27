@@ -10,6 +10,7 @@ internal class GameVsBot
 {
     int guess;
     int guesses = 1;
+    bool isMultiplayer;
 
     private Player player;
     private SaveBestResultToFile bestResult;
@@ -17,7 +18,7 @@ internal class GameVsBot
     public GameVsBot(Player player)
     {
         this.player = player;
-        bestResult = new SaveBestResultToFile(player.Nickname);
+        bestResult = new SaveBestResultToFile(player.Nickname, isMultiplayer);
     }
 
     public void StartGameVsBot()
