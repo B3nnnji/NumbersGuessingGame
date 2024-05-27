@@ -16,8 +16,8 @@ internal class MixedGame
     private int maxRange;
     private int minRange;
 
-    public MixedGame(Player player, int maxRange, int minRange)
-    {
+    public MixedGame(Player player, int minRange, int maxRange)
+    { 
         this.player = player;
         this.maxRange = maxRange;
         this.minRange = minRange;
