@@ -1,61 +1,59 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
-namespace NumbersGuessingGame;
-
-internal class SaveBestResultToFile
+namespace NumbersGuessingGame
 {
-    private int bestResult;
-    private string nickname;
-    private string filePath;
-
-    public SaveBestResultToFile(string nickname)
+    internal class SaveBestResultToFile
     {
-        this.nickname = nickname;
-        filePath = $"{nickname}_BestResult.txt";
-    }
+        private int bestResult;
+        private string nickname;
+        private string filePath;
 
-    private void SaveResult()
-    {
-        string result = $"Najlepszy Wynik: {bestResult}";
-
-        try
+        public SaveBestResultToFile(string nickname, bool isMultiplayer)
         {
-            File.WriteAllText(filePath, result);
-            Console.WriteLine("Wynik zapisany pomyślnie do pliku.");
+            this.nickname = nickname;
+            filePath = isMultiplayer ? $"{nickname}_MultiplayerBestResult.txt" : $"{nickname}_BestResult.txt";
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Wystąpił błąd z zapisem wyniku: {ex.Message}");
-        }
-    }
 
-    public void CheckAndUpdateBestResult(int currentResult)
-    {
-        if (File.Exists(filePath))
+        public void SaveResult()
         {
-            string existingResultContent = File.ReadAllText(filePath);
-            if (int.TryParse(existingResultContent.Replace("Najlepszy Wynik: ", "").Trim(), out int existingBestResult))
+            string result = $"Najlepszy Wynik: {bestResult}";
+
+            try
             {
-                if (currentResult < existingBestResult || existingBestResult == 0)
-                {
-                    bestResult = currentResult;
-                    Console.WriteLine("Udało Ci się poprawić najlepszy wynik!");
-                    SaveResult();
-                }
-                else
-                {
-                    Console.WriteLine("Nie udało się poprawić najlepszego wyniku.");
-                }
+                File.WriteAllText(filePath, result);
+                Console.WriteLine("Wynik zapisany pomyślnie do pliku.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Wystąpił błąd z zapisem wyniku: {ex.Message}");
             }
         }
-        else
+
+        public void CheckAndUpdateBestResult(int currentResult)
         {
-            bestResult = currentResult;
-            SaveResult();
+            if (File.Exists(filePath))
+            {
+                string existingResultContent = File.ReadAllText(filePath);
+                if (int.TryParse(existingResultContent.Replace("Najlepszy Wynik: ", "").Trim(), out int existingBestResult))
+                {
+                    if (currentResult < existingBestResult || existingBestResult == 0)
+                    {
+                        bestResult = currentResult;
+                        Console.WriteLine("Udało Ci się poprawić najlepszy wynik!");
+                        SaveResult();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Nie udało się poprawić najlepszego wyniku.");
+                    }
+                }
+            }
+            else
+            {
+                bestResult = currentResult;
+                SaveResult();
+            }
         }
     }
 }
