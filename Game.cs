@@ -77,7 +77,7 @@ namespace NumbersGuessingGame
         {
             while (true)
             {
-                Console.WriteLine("Czy chcesz zagrać ponownie? (Y/N)");
+                Console.WriteLine("Czy chcesz zagrać ponownie w trybie \"Ty zgadujesz\"? (Y/N)");
                 Console.WriteLine();
                 string choice = Console.ReadLine() ?? string.Empty;
                 choice = choice.ToUpper();
