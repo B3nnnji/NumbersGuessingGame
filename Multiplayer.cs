@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace NumbersGuessingGame
+﻿namespace NumbersGuessingGame
 {
     internal class Multiplayer
     {
@@ -11,12 +7,14 @@ namespace NumbersGuessingGame
         private int maxRange;
         private int numberToGuess;
         private Dictionary<Player, int> playerGuesses;
+        private bool isCustomRange;
 
-        public Multiplayer(Player[] players, int minRange, int maxRange)
+        public Multiplayer(Player[] players, int minRange, int maxRange, bool isCustomRange = false)
         {
             this.players = players;
             this.minRange = minRange;
             this.maxRange = maxRange;
+            this.isCustomRange = isCustomRange;
             playerGuesses = new Dictionary<Player, int>();
 
             foreach (var player in players)
@@ -28,13 +26,12 @@ namespace NumbersGuessingGame
         public void RandomNumberGenerator()
         {
             Random random = new Random();
-            numberToGuess = random.Next(minRange, maxRange);
+            numberToGuess = random.Next(minRange, maxRange + 1);
         }
 
         public void StartMultiplayerGame()
         {
             RandomNumberGenerator();
-            Console.WriteLine(numberToGuess);
             Console.WriteLine($"Zgadnij liczbę z zakresu od {minRange} do {maxRange}.");
             bool numberGuessed = false;
             int currentPlayerIndex = 0;
@@ -54,6 +51,15 @@ namespace NumbersGuessingGame
                         numberGuessed = true;
                         SaveBestResultToFile saveResult = new SaveBestResultToFile(currentPlayer.Nickname, true);
                         saveResult.CheckAndUpdateBestResult(playerGuesses[currentPlayer]);
+
+                        if (isCustomRange)
+                        {
+                            Console.WriteLine($"{currentPlayer.Nickname}, masz możliwość wybrać nowy zakres liczb.");
+                            Console.WriteLine("PODAJ NAJMNIEJSZĄ LICZBĘ Z TWOJEGO ZAKRESU:");
+                            minRange = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine("PODAJ NAJWIĘKSZĄ LICZBĘ Z TWOJEGO ZAKRESU:");
+                            maxRange = Convert.ToInt32(Console.ReadLine());
+                        }
                     }
                     else if (guess < numberToGuess)
                     {
@@ -68,7 +74,7 @@ namespace NumbersGuessingGame
                 }
                 catch (FormatException)
                 {
-                    Console.WriteLine("Wprowadzono zły format odpowiedzi sprubój ponownie!");
+                    Console.WriteLine("Wprowadzono zły format odpowiedzi spróbuj ponownie!");
                 }
             }
             PlayAgain();
@@ -78,8 +84,7 @@ namespace NumbersGuessingGame
         {
             while (true)
             {
-                Console.WriteLine("Czy chcesz zagrać ponownie? (Y/N)");
-                Console.WriteLine();
+                Console.WriteLine("Czy chcesz zagrać ponownie w trybie multiplayer? (Y/N)");
                 string choice = Console.ReadLine() ?? string.Empty;
                 choice = choice.ToUpper();
 
@@ -89,14 +94,12 @@ namespace NumbersGuessingGame
                 }
                 else if (choice == "N")
                 {
-                    Console.WriteLine();
                     Console.WriteLine("!!!DZIĘKUJĘ ZA GRĘ!!!");
                     break;
                 }
                 else
                 {
                     Console.WriteLine("Podaj poprawną odpowiedź!");
-                    Console.WriteLine();
                 }
             }
         }
