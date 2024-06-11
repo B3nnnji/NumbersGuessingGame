@@ -74,7 +74,7 @@ internal class GameVsBot
     {
         while (true)
         {
-            Console.WriteLine("Czy chcesz zagrać ponownie? (Y/N)");
+            Console.WriteLine("Czy chcesz zagrać ponownie przeciwko komputerowi? (Y/N)");
             Console.WriteLine();
             string choice = Console.ReadLine() ?? string.Empty;
             choice = choice.ToUpper();
