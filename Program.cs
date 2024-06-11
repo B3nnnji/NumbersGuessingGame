@@ -6,6 +6,32 @@ namespace NumbersGuessingGame
     {
         static void Main(string[] args)
         {
+            bool keepPlaying = true;
+
+            while (keepPlaying)
+            {
+                int minRange, maxRange;
+                SelectDifficulty(out minRange, out maxRange);
+                SelectGameMode(minRange, maxRange);
+
+                Console.WriteLine("Naciśnij 1 jeśli chcesz wrócić do menu głownego");
+                Console.WriteLine();
+                Console.WriteLine("Naciśnij 2 jeśli chcesz wyjść z gry");
+                Console.WriteLine();
+                string choice = Console.ReadLine() ?? string.Empty;
+                choice = choice.ToUpper();
+
+                if (choice == "2")
+                {
+                    keepPlaying = false;
+                }
+            }
+
+            Console.WriteLine("!!!DZIĘKUJĘ ZA GRĘ!!!");
+        }
+
+        static void SelectDifficulty(out int minRange, out int maxRange)
+        {
             Console.WriteLine("!!!WYBIERZ POZIOM TRUDNOŚCI!!!");
             Console.WriteLine();
             Console.WriteLine("1. Łatwy (1 - 100)");
@@ -14,10 +40,10 @@ namespace NumbersGuessingGame
             Console.WriteLine();
             Console.WriteLine("3. Trudny (1 - 1,000,000)");
             Console.WriteLine();
+            Console.WriteLine("4. Niestandardowy (Twój zakres liczb)");
 
             int difficulty = Convert.ToInt32(Console.ReadLine());
-            int minRange = 1;
-            int maxRange;
+            minRange = 1;
 
             switch (difficulty)
             {
@@ -39,12 +65,26 @@ namespace NumbersGuessingGame
                     Console.WriteLine("WYBRANY POZIOM TRUDNOŚCI: TRUDNY");
                     Console.WriteLine();
                     break;
+                case 4:
+                    Console.WriteLine();
+                    Console.WriteLine("WYBRANY POZIOM TRUDNOŚCI: NIESTANDARDOWY, PODAJ ZAKRES LICZB");
+                    Console.WriteLine();
+                    Console.Write("PODAJ NAJMNIEJSZĄ LICZBĘ Z TWOJEGO ZAKRESU: ");
+                    minRange = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine();
+                    Console.Write("PODAJ NAJWIĘKSZĄ LICZBĘ Z TWOJEGO ZAKRESU: ");
+                    maxRange = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine();
+                    break;
                 default:
                     Console.WriteLine("Niepoprawny wybór poziomu trudności. Ustawiam poziom łatwy.");
                     maxRange = 100;
                     break;
             }
+        }
 
+        static void SelectGameMode(int minRange, int maxRange)
+        {
             Console.WriteLine("!!!WYBIERZ TRYB GRY!!!");
             Console.WriteLine();
             Console.WriteLine("1. Ty zgadujesz.");
@@ -107,7 +147,7 @@ namespace NumbersGuessingGame
                         players[i].Nickname = Console.ReadLine();
                     }
 
-                    Multiplayer multiplayerGame = new Multiplayer(players, minRange, maxRange);
+                    Multiplayer multiplayerGame = new Multiplayer(players, minRange, maxRange, true);
                     multiplayerGame.StartMultiplayerGame();
                     break;
                 default:
